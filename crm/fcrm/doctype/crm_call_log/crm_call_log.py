@@ -7,6 +7,7 @@ from frappe.model.document import Document
 
 from crm.integrations.api import get_contact_by_phone_number
 from crm.utils import seconds_to_duration
+from crm.fcrm.doctype.crm_lead.crm_lead import set_communication_status_replied
 
 
 class CRMCallLog(Document):
@@ -131,6 +132,10 @@ class CRMCallLog(Document):
 			return
 
 		self.append("links", {"link_doctype": reference_doctype, "link_name": reference_name})
+
+	def after_insert(self):
+		if self.reference_doctype and self.reference_docname:
+			set_communication_status_replied(self.reference_doctype, self.reference_docname)
 
 
 def parse_call_log(call):

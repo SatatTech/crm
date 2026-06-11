@@ -151,6 +151,9 @@ doc_events = {
 	"Comment": {
 		"on_update": ["crm.api.comment.on_update"],
 	},
+	"Communication": {
+		"after_insert": ["crm.api.activities.set_lead_communication_status_on_email"],
+	},
 	"WhatsApp Message": {
 		"validate": ["crm.api.whatsapp.validate"],
 		"on_update": ["crm.api.whatsapp.on_update"],

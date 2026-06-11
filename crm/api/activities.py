@@ -7,6 +7,13 @@ from frappe.desk.form.load import get_docinfo
 from frappe.query_builder import JoinType
 
 from crm.fcrm.doctype.crm_call_log.crm_call_log import parse_call_log
+from crm.fcrm.doctype.crm_lead.crm_lead import set_communication_status_replied
+
+
+def set_lead_communication_status_on_email(doc, method):
+	"""Called after a Communication is inserted — sets communication_status to Replied on linked CRM Lead."""
+	if doc.reference_doctype == "CRM Lead" and doc.reference_name:
+		set_communication_status_replied(doc.reference_doctype, doc.reference_name)
 
 
 @frappe.whitelist()
