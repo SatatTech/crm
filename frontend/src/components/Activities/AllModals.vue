@@ -13,14 +13,14 @@
     :note="note"
     :doctype="doctype"
     :doc="doc?.name"
-    @after="redirect('notes')"
+    @after="(d, isNew) => { redirect('notes'); if (isNew && doctype === 'CRM Lead') emit('reloadLead') }"
   />
   <CallLogModal
     v-if="showCallLogModal"
     v-model="showCallLogModal"
     :data="callLog"
     :referenceDoc="referenceDoc"
-    :options="{ afterInsert: () => activities.reload() }"
+    :options="{ afterInsert: () => { activities.reload(); if (doctype === 'CRM Lead') emit('reloadLead') } }"
   />
 </template>
 <script setup>
@@ -35,6 +35,7 @@ const props = defineProps({
   doctype: String,
 })
 
+const emit = defineEmits(['reloadLead'])
 const activities = defineModel()
 const doc = defineModel('doc')
 

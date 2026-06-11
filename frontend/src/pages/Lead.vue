@@ -57,6 +57,7 @@
           v-model:tabIndex="tabIndex"
           @beforeSave="saveChanges"
           @afterSave="reloadAssignees"
+          @reloadLead="handleReloadLead"
         />
       </template>
     </Tabs>
@@ -429,6 +430,12 @@ const tabs = computed(() => {
       icon: WhatsAppIcon,
       condition: () => whatsappEnabled.value,
     },
+    {
+      name: 'Lead Qualification',
+      label: __('Lead Qualification'),
+      icon: NoteIcon,
+      // condition: () => doctypeMeta['CRM Lead']?.fields.some((f) => f.fieldname === 'lead_qualification'),
+    },
   ]
   return tabOptions.filter((tab) => (tab.condition ? tab.condition() : true))
 })
@@ -492,5 +499,9 @@ function reloadAssignees(data) {
   if (data?.hasOwnProperty('lead_owner')) {
     assignees.reload()
   }
+}
+
+function handleReloadLead() {
+  document.reload()
 }
 </script>

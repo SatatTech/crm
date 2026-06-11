@@ -19,6 +19,17 @@
       <span>{{ __('Loading...') }}</span>
     </div>
     <div
+  v-else-if="title == 'Lead Qualification'"
+  class="h-full flex flex-col px-3 sm:px-10"
+>
+  <LeadQualification
+    :leadId="docname"
+    @reloadLead="() => {
+  emit('reloadLead')
+}"
+  />
+</div>
+    <div
       v-else-if="
         activities?.length ||
         (whatsappMessages.data?.length && title == 'WhatsApp')
@@ -408,6 +419,7 @@
     v-model="all_activities"
     :doctype="doctype"
     :doc="doc"
+    @reloadLead="emit('reloadLead')"
   />
   <FilesUploader
     v-model="showFilesUploader"
@@ -428,6 +440,7 @@ import CommentArea from '@/components/Activities/CommentArea.vue'
 import CallArea from '@/components/Activities/CallArea.vue'
 import NoteArea from '@/components/Activities/NoteArea.vue'
 import TaskArea from '@/components/Activities/TaskArea.vue'
+import LeadQualification from '@/components/Activities/LeadQualification.vue'
 import AttachmentArea from '@/components/Activities/AttachmentArea.vue'
 import DataFields from '@/components/Activities/DataFields.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
@@ -496,7 +509,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['beforeSave', 'afterSave'])
+const emit = defineEmits(['beforeSave', 'afterSave', 'reloadLead'])
 
 const route = useRoute()
 
