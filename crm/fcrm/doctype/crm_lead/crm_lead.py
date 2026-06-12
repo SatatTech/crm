@@ -454,6 +454,23 @@ class CRMLead(Document):
 		}
 
 
+def set_communication_status_replied(reference_doctype, reference_name):
+	"""Set communication_status to 'Replied' on a CRM Lead, triggering full SLA recalculation."""
+	if reference_doctype != "CRM Lead":
+		return
+	if not frappe.db.exists("CRM Lead", reference_name):
+		return
+	if not frappe.db.exists("CRM Communication Status", "Replied"):
+		return
+	current = frappe.db.get_value("CRM Lead", reference_name, "communication_status")
+	if current == "Replied":
+		return
+	lead = frappe.get_doc("CRM Lead", reference_name)
+	lead.communication_status = "Replied"
+	lead.flags.ignore_permissions = True
+	lead.save()
+
+
 @frappe.whitelist()
 def convert_to_deal(lead, doc=None, deal=None, existing_contact=None, existing_organization=None):
 	if not (doc and doc.flags.get("ignore_permissions")) and not frappe.has_permission(
