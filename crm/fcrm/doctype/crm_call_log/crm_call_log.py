@@ -5,6 +5,7 @@ import frappe
 from frappe import _, generate_hash
 from frappe.model.document import Document
 
+from crm.fcrm.doctype.crm_lead.crm_lead import set_communication_status_replied
 from crm.integrations.api import get_contact_by_phone_number
 from crm.utils import seconds_to_duration
 
@@ -52,6 +53,10 @@ class CRMCallLog(Document):
 			self.id = generate_hash(length=12)
 		if not self.telephony_medium:
 			self.telephony_medium = "Manual"
+	
+	def after_insert(self):
+		if self.reference_doctype and self.reference_docname:
+			set_communication_status_replied(self.reference_doctype, self.reference_docname)
 
 	@staticmethod
 	def default_list_data():
