@@ -250,31 +250,33 @@ def add_property_setter():
 
 
 def add_email_template_custom_fields():
-	if not frappe.get_meta("Email Template").has_field("enabled"):
-		click.secho("* Installing Custom Fields in Email Template")
+	meta = frappe.get_meta("Email Template")
 
-		create_custom_fields(
-			{
-				"Email Template": [
-					{
-						"default": "0",
-						"fieldname": "enabled",
-						"fieldtype": "Check",
-						"label": "Enabled",
-						"insert_after": "",
-					},
-					{
-						"fieldname": "reference_doctype",
-						"fieldtype": "Link",
-						"label": "Doctype",
-						"options": "DocType",
-						"insert_after": "enabled",
-					},
-				]
-			}
-		)
+	fields = [
+		{
+			"default": "0",
+			"fieldname": "enabled",
+			"fieldtype": "Check",
+			"label": "Enabled",
+			"insert_after": "",
+		},
+		{
+			"fieldname": "reference_doctype",
+			"fieldtype": "Link",
+			"label": "Doctype",
+			"options": "DocType",
+			"insert_after": "enabled",
+		},
+	]
 
-		frappe.clear_cache(doctype="Email Template")
+	# Frappe v16 ships `reference_doctype` on Email Template itself, so only create the missing fields.
+	fields = [field for field in fields if not meta.has_field(field["fieldname"])]
+	if not fields:
+		return
+
+	click.secho("* Installing Custom Fields in Email Template")
+	create_custom_fields({"Email Template": fields})
+	frappe.clear_cache(doctype="Email Template")
 
 
 def add_default_industries():
