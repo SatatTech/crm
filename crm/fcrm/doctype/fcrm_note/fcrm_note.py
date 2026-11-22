@@ -4,6 +4,9 @@
 # import frappe
 from frappe.model.document import Document
 
+from crm.fcrm.doctype.crm_lead.crm_lead import set_communication_status_replied
+
+
 
 class FCRMNote(Document):
 	# begin: auto-generated types
@@ -19,6 +22,10 @@ class FCRMNote(Document):
 		reference_doctype: DF.Link | None
 		title: DF.Data
 	# end: auto-generated types
+	
+	def after_insert(self):
+		if self.reference_doctype and self.reference_docname:
+			set_communication_status_replied(self.reference_doctype, self.reference_docname)
 
 	@staticmethod
 	def default_list_data():

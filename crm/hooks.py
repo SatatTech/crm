@@ -163,7 +163,9 @@ doc_events = {
 		"on_update": ["crm.api.todo.on_update"],
 	},
 	"Communication": {
-		"after_insert": ["crm.utils.on_communication_insert"],
+		"after_insert": ["crm.utils.on_communication_insert",
+        "crm.api.activities.set_lead_communication_status_on_email",
+        ],
 		"on_update": ["crm.utils.on_communication_update"],
 	},
 	"Comment": {

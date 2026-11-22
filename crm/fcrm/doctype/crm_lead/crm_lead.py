@@ -512,3 +512,20 @@ def convert_to_deal(
 	organization = lead.create_organization(existing_organization)
 	_deal = lead.create_deal(contact, organization, deal)
 	return _deal
+
+
+def set_communication_status_replied(reference_doctype, reference_name):
+	"""Set communication_status to 'Replied' on a CRM Lead, triggering full SLA recalculation."""
+	if reference_doctype != "CRM Lead":
+		return
+	if not frappe.db.exists("CRM Lead", reference_name):
+		return
+	if not frappe.db.exists("CRM Communication Status", "Replied"):
+		return
+	current = frappe.db.get_value("CRM Lead", reference_name, "communication_status")
+	if current == "Replied":
+		return
+	lead = frappe.get_doc("CRM Lead", reference_name)
+	lead.communication_status = "Replied"
+	lead.flags.ignore_permissions = True
+	lead.save()

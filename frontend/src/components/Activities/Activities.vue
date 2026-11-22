@@ -383,6 +383,11 @@
         @afterSave="(data) => emit('afterSave', data)"
       />
     </div>
+    <div
+      v-else-if="title == 'Lead Qualification'"
+      class="h-full flex flex-col px-3 sm:px-10">
+      <LeadQualification :leadId="docname" @reloadLead="emit('reloadLead')" />
+    </div>
     <EmptyState
       v-else
       :title="emptyText"
@@ -421,6 +426,7 @@
     v-model="all_activities"
     :doctype="doctype"
     :doc="doc"
+    @reloadLead="emit('reloadLead')"
   />
   <FilesUploader
     v-model="showFilesUploader"
@@ -443,6 +449,7 @@ import NoteArea from '@/components/Activities/NoteArea.vue'
 import TaskArea from '@/components/Activities/TaskArea.vue'
 import AttachmentArea from '@/components/Activities/AttachmentArea.vue'
 import DataFields from '@/components/Activities/DataFields.vue'
+import LeadQualification from '@/components/Activities/LeadQualification.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import ActivityIcon from '@/components/Icons/ActivityIcon.vue'
 import EmailIcon from '@/components/Icons/EmailIcon.vue'
@@ -503,7 +510,7 @@ const props = defineProps({
   tabs: { type: Array, default: () => [] },
 })
 
-const emit = defineEmits(['beforeSave', 'afterSave'])
+const emit = defineEmits(['beforeSave', 'afterSave', 'reloadLead'])
 
 const route = useRoute()
 

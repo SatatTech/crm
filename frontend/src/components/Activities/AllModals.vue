@@ -13,6 +13,7 @@ const props = defineProps({
 })
 
 const activities = defineModel({ type: Object })
+const emit = defineEmits(['reloadLead'])
 
 const { showModal } = useDoctypeModal()
 const { updateOnboardingStep } = useOnboarding('frappecrm')
@@ -89,6 +90,7 @@ function afterDoctype(d, isInsert = false) {
   if (isInsert) {
     updateOnboardingStep('create_first_' + name)
     capture(name + '_created')
+    if (props.doctype === 'CRM Lead') emit('reloadLead')
   } else {
     capture(name + '_updated')
   }

@@ -57,6 +57,7 @@
           :tabs="tabs"
           @beforeSave="beforeStatusChange"
           @afterSave="reloadResources"
+          @reloadLead="handleReloadLead"
         />
       </template>
     </Tabs>
@@ -453,6 +454,11 @@ const tabs = computed(() => {
       icon: WhatsAppIcon,
       condition: () => whatsappEnabled.value,
     },
+    {
+      name: 'Lead Qualification',
+      label: __('Lead Qualification'),
+      icon: NoteIcon,
+    },
   ]
   return tabOptions.filter((tab) => (tab.condition ? tab.condition() : true))
 })
@@ -551,5 +557,9 @@ function reloadResources(data) {
   ) {
     sections.reload()
   }
+}
+
+function handleReloadLead() {
+  document.reload()
 }
 </script>
